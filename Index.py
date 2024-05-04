@@ -3,20 +3,16 @@ from pyrogram.types import Message
 import requests
 import os
 
-API_ID = 29934089
-API_HASH = 'bf7970d42ee3608bf1bc8a122b6f8c42'
-BOT_TOKEN = '6718893017:AAERA89SmPrNso6Tkyhnp8tjHRuVkjnOqOo'
+API_ID = 1239876 #API_ID שקיבלתם באתר 
+API_HASH = 'abc777vshdjndb' #API_HASH שקיבלתם באתר
+BOT_TOKEN = '123:aaa' #טוקן של הבוט
 
-user_id_to_allow = 6454273217
 
 app = Client("my_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
 @app.on_message(filters.command("start") & filters.private)
 async def start_command(client, message: Message):
-    if message.from_user.id == user_id_to_allow:
-        await message.reply_text("Send me an audio, video, or voice file up to 50MB, and I will save it on the server.")
-    else:
-        await message.reply_text("You do not have permission to perform this action.")
+    await message.reply_text("Send me an audio, video, or voice file up to 50MB, and I will save it on the server.")
 
 @app.on_message(filters.private)
 async def save_media(client, message: Message):
@@ -27,9 +23,13 @@ async def save_media(client, message: Message):
                 file_name = media.file_name if hasattr(media, 'file_name') else "voice_note.oga"
                 file_path = await message.download(file_name=f"downloads/{file_name}")
                 await message.reply_text(f"File saved at server: {file_name}")
-                url_pass = requests.get("http://38.242.215.142/resseler/api/GetByTeletopPassword/?did=0794946655")
-                pass_number = url_pass.text
-                api_url = f"https://www.call2all.co.il/ym/api/UploadFile?token=0794946655:{pass_number}&path=ivr2:/1&convertAudio=1&autoNumbering=true&tts=0"
+                number_sys = "039660770" #מספר מערכת
+                pass_number = "123456" # סיסמת ניהול למערכת
+                path = "ivr2:/1/1" #נתיב להעלאת הקובץ
+                convertAudio = "1" # אם להמיר את הקובץ ל wav - 1 או 0
+                autoNumbering = "true" #אם לעלות כמספר קובץ חדש או לפי שם הקובץ
+                tts = "0" #אם הקובץ הוא קובץ tts או לא : 1 או 0
+                api_url = f"https://www.call2all.co.il/ym/api/UploadFile?token={number_sys}:{pass_number}&path={path}&convertAudio={convertAudio}&autoNumbering={autoNumbering}&tts={tts}"
                 files = {'file': open(file_path, 'rb')}
                 response = requests.post(api_url, files=files)
                 response_json = response.json()
@@ -47,3 +47,4 @@ async def save_media(client, message: Message):
         await message.reply_text("You do not have permission to perform this action.")
 
 app.run()
+            
